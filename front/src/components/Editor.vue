@@ -7,9 +7,10 @@
   import * as monaco from 'monaco-editor'
 
   export default {
+    props: ['defaultText'],
     mounted() {
       let editor = monaco.editor.create(document.getElementById("editor"), {
-        value: "function hello() {\n\talert('Hello world!');\n}",
+        value: this.defaultText,
         language: 'javascript',
         theme: 'vs-dark',
         quickSuggestions: true,
