@@ -8,13 +8,17 @@
 
   export default {
     mounted() {
-      monaco.editor.create(document.getElementById("editor"), {
+      let editor = monaco.editor.create(document.getElementById("editor"), {
         value: "function hello() {\n\talert('Hello world!');\n}",
         language: 'javascript',
         theme: 'vs-dark',
         quickSuggestions: true,
         wordBasedSuggestions: true
-      });
+      })
+      editor.onDidChangeModelContent(() => {
+        this.$emit('text-changed', editor.getValue())
+        // TODO send to server every 500ms --> Save last version and last sent version and do a timeout to ignore changes in between
+      })
     }
   }
 </script>

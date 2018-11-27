@@ -1,6 +1,6 @@
 <template>
   <div class="project">
-    <Editor />
+    <Editor @text-changed="textChanged" :default-text="defaultText" />
   </div>
 </template>
 
@@ -8,7 +8,17 @@
   import Editor from '../components/Editor'
 
   export default {
+    data() {
+      return {
+        defaultText: "function hello() {\n\tconsole.log('Hello world!');\n}"
+      }
+    },
     components: {Editor},
+    methods: {
+      textChanged(newValue) {
+        console.log(newValue)
+      }
+    }
   }
 </script>
 
