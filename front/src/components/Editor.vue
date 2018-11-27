@@ -14,11 +14,16 @@
         language: 'javascript',
         theme: 'vs-dark',
         quickSuggestions: true,
-        wordBasedSuggestions: true
+        wordBasedSuggestions: true,
+        automaticLayout: true,
       })
       editor.onDidChangeModelContent(() => {
         this.$emit('text-changed', editor.getValue())
         // TODO send to server every 500ms --> Save last version and last sent version and do a timeout to ignore changes in between
+      })
+
+      window.addEventListener('resize', () => {
+        editor.layout()
       })
     }
   }

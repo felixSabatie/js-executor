@@ -5,13 +5,20 @@
     </router-link>
     <ul class="content">
       <li class="item">Share</li>
+      <li class="item run-button" @click="run">
+        <span class="run-text">Run</span><font-awesome-icon class="play-icon" icon="play" />
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
   export default {
-
+    methods: {
+      run() {
+        this.$emit('run')
+      }
+    }
   }
 </script>
 
@@ -61,12 +68,31 @@
       }
     }
 
-  .content {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    margin: 0;
-    padding: 0;
+    .content {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+
+      .run-button {
+        .run-text {
+          margin-right: 10px;
+          transition: margin-right .3s ease-in-out;
+        }
+        .play-icon {
+          transition: transform .3s ease-in-out;
+        }
+
+        &:hover {
+          .run-text {
+            margin-right: 15px;
+          }
+          .play-icon {
+            transform: scale(1.2);
+          }
+        }
+      }
     }
   }
 </style>

@@ -3,7 +3,7 @@
     <div class="content">
       <div class="welcome-text-container">
         <span class="welcome-text">{{welcomeText}}</span>
-        <span class="caret"></span>
+        <span class="cursor"></span>
       </div>
       <div class="buttons" :class="displayButtons ? 'show' : 'hide'">
         <button class="btn" @click="generateProject">Create a project</button>
@@ -64,7 +64,7 @@
           font-size: 30px;
           white-space: pre-wrap;
         }
-        .caret {
+        .cursor {
           width: 3px;
           height: 26px;
           display: inline-block;

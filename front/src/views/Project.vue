@@ -1,12 +1,12 @@
 <template>
   <div class="project">
-    <Navbar />
+    <Navbar @run="run" />
     <div class="project-content">
       <div class="editor-container">
         <Editor @text-changed="textChanged" :default-text="defaultText" />
       </div>
       <div class="terminal-container">
-        <Terminal />
+        <Terminal :logs="logs" />
       </div>
       <div class="chat-container">
         <Chat />
@@ -20,17 +20,33 @@
   import Chat from '../components/Chat'
   import Terminal from '../components/Terminal'
   import Navbar from '../components/Navbar'
+  import axios from 'axios'
+  import {serverUrl} from '../../env'
 
   export default {
     data() {
       return {
-        defaultText: "function hello() {\n\tconsole.log('Hello world!');\n}"
+        defaultText: "function hello() {\n\tconsole.log('Hello world!');\n}\n\nhello();",
+        editorData: "function hello() {\n\tconsole.log('Hello world!');\n}\n\nhello();",
+        logs: []
       }
     },
     components: {Editor, Chat, Terminal, Navbar},
     methods: {
       textChanged(newValue) {
-        console.log(newValue)
+        this.editorData = newValue
+      },
+      run() {
+        this.logs.push({
+          message: 'running...',
+          isError: false,
+          isWarning: false
+        })
+        axios.post(`${serverUrl}/api/projects/aze/execute`, {
+          function: this.editorData
+        }).then(response => {
+          this.logs.push(...response.data)
+        })
       }
     }
   }
