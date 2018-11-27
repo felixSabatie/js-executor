@@ -1,15 +1,12 @@
 <template>
   <div class="terminal">
-    <h1>Terminal</h1>
-    <div class="logs">
-      {{logs}}
-    </div>
+    <div class="logs">{{logs}}</div>
   </div>
 </template>
 
 <script>
   export default {
-    props: ['logs']
+    props: ['logs'],
   }
 </script>
 

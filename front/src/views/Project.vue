@@ -27,7 +27,7 @@
     data() {
       return {
         defaultText: "function hello() {\n\tconsole.log('Hello world!');\n}\n\nhello();",
-        editorData: '',
+        editorData: "function hello() {\n\tconsole.log('Hello world!');\n}\n\nhello();",
         logs: ''
       }
     },
@@ -37,6 +37,7 @@
         this.editorData = newValue
       },
       run() {
+        this.logs += 'running...\n'
         axios.post(`${serverUrl}/api/projects/aze/execute`, {
           function: this.editorData
         }).then(response => {
