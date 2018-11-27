@@ -37,7 +37,7 @@
       },
 
       generateProject() {
-        // TODO
+        this.$router.push({name: 'project'})
       }
     }
   }
