@@ -10,11 +10,12 @@ router.post('/', function(req, res) {
 router.post('/:hash/execute', function (req, res) {
   let logs = ''
   const consoleLog = (message) => {
-    logs += message + '\n'
+    logs += '  ' + message + '\n'
   }
 
   console.log('Executing...')
   redirectConsoleToFunctions(consoleLog, consoleLog, consoleLog)
+  console.log('running...')
   try {
     let userFunction = Function(req.body.function)
     userFunction()

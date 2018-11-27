@@ -5,14 +5,20 @@
     </router-link>
     <ul class="content">
       <li class="item">Share</li>
-      <li class="item run-button"><span class="run-text">Run</span><font-awesome-icon class="play-icon" icon="play" /></li>
+      <li class="item run-button" @click="run">
+        <span class="run-text">Run</span><font-awesome-icon class="play-icon" icon="play" />
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
   export default {
-
+    methods: {
+      run() {
+        this.$emit('run')
+      }
+    }
   }
 </script>
 
