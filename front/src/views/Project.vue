@@ -1,15 +1,20 @@
 <template>
   <div class="project">
-    <h1>Project</h1>
+    <Editor />
   </div>
 </template>
 
 <script>
-  export default {
+  import Editor from '../components/Editor'
 
+  export default {
+    components: {Editor},
   }
 </script>
 
 <style lang="scss">
-
+  .project {
+    height: 100%;
+    overflow: hidden;
+  }
 </style>
