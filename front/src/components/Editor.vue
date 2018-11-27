@@ -9,7 +9,7 @@
   export default {
     props: ['defaultText'],
     mounted() {
-      editor = monaco.editor.create(document.getElementById("editor"), {
+      let editor = monaco.editor.create(document.getElementById("editor"), {
         value: this.defaultText,
         language: 'javascript',
         theme: 'vs-dark',

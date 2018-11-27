@@ -28,7 +28,7 @@
       return {
         defaultText: "function hello() {\n\tconsole.log('Hello world!');\n}\n\nhello();",
         editorData: "function hello() {\n\tconsole.log('Hello world!');\n}\n\nhello();",
-        logs: ''
+        logs: []
       }
     },
     components: {Editor, Chat, Terminal, Navbar},
@@ -37,11 +37,15 @@
         this.editorData = newValue
       },
       run() {
-        this.logs += 'running...\n'
+        this.logs.push({
+          message: 'running...',
+          isError: false,
+          isWarning: false
+        })
         axios.post(`${serverUrl}/api/projects/aze/execute`, {
           function: this.editorData
         }).then(response => {
-          this.logs += response.data
+          this.logs.push(...response.data)
         })
       }
     }

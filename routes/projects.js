@@ -8,19 +8,37 @@ router.post('/', function(req, res) {
 })
 
 router.post('/:hash/execute', function (req, res) {
-  let logs = ''
+  let logs = []
   const consoleLog = (message) => {
-    logs += message + '\n'
+    logs.push({
+      message: message,
+      isError: false,
+      isWarning: false
+    })
+  }
+  const consoleError = (message) => {
+    logs.push({
+      message: message,
+      isError: true,
+      isWarning: false
+    })
+  }
+  const consoleWarn = (message) => {
+    logs.push({
+      message: message,
+      isError: false,
+      isWarning: true
+    })
   }
 
   console.log('Executing...')
-  redirectConsoleToFunctions(consoleLog, consoleLog, consoleLog)
+  redirectConsoleToFunctions(consoleLog, consoleWarn, consoleError)
   try {
     // let userFunction = Function(req.body.function)
     // userFunction()
     eval(req.body.function)
   } catch(err) {
-    console.error(err)
+    console.error(err.toString())
   }
   restoreConsoleFunctions()
   console.log('Done')
