@@ -10,8 +10,10 @@
     mounted() {
       monaco.editor.create(document.getElementById("editor"), {
         value: "function hello() {\n\talert('Hello world!');\n}",
-        language: "javascript",
-        theme: 'vs-dark'
+        language: 'javascript',
+        theme: 'vs-dark',
+        quickSuggestions: true,
+        wordBasedSuggestions: true
       });
     }
   }
