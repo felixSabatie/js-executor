@@ -13,7 +13,22 @@
 
 <script>
   export default {
+    data() {
+      return {
+        domLogs: {}
+      }
+    },
     props: ['logs'],
+    mounted() {
+      this.domLogs = this.$el.querySelector('.terminal')
+    },
+    watch: {
+      logs() {
+        this.$nextTick(() => {
+          this.domLogs.scrollTop = this.domLogs.scrollHeight
+        })
+      }
+    }
   }
 </script>
 
