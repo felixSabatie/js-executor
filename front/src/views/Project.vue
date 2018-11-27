@@ -53,6 +53,8 @@
 
       .editor-container {
         grid-row: 1 / last-line;
+        background-color: #1e1e1e;
+        padding-top: 10px;
       }
       .terminal-container {
         grid-column: 2 / 3;
