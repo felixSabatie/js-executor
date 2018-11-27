@@ -1,15 +1,101 @@
 <template>
   <div class="home">
-    <h1>Home</h1>
+    <div class="content">
+      <div class="welcome-text-container">
+        <span class="welcome-text">{{welcomeText}}</span>
+        <span class="caret"></span>
+      </div>
+      <div class="buttons" :class="displayButtons ? 'show' : 'hide'">
+        <button class="btn" @click="generateProject">Create a project</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
   export default {
+    data() {
+      return {
+        welcomeText: '',
+        welcomeTextToDisplay: 'Ready to write some beautiful code ? ',
+        displayButtons: false
+      }
+    },
+    mounted() {
+      setTimeout(() => this.displayCharsOneByOne(0), 1000)
+    },
+    methods: {
+      displayCharsOneByOne(charPos) {
+        setTimeout(() => {
+          this.welcomeText += this.welcomeTextToDisplay.charAt(charPos)
+          if(charPos < this.welcomeTextToDisplay.length) {
+            this.displayCharsOneByOne(charPos + 1)
+          } else {
+            this.displayButtons = true
+          }
+        }, 60)
+      },
 
+      generateProject() {
+        // TODO
+      }
+    }
   }
 </script>
 
 <style lang="scss">
+  @import '../styles/colors';
+  
+  .home {
+    height: 100%;
+    background-color: $dark-background;
+    color: $white-text;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
+    .content {
+      .welcome-text-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .welcome-text {
+          font-size: 30px;
+          white-space: pre-wrap;
+        }
+        .caret {
+          width: 3px;
+          height: 26px;
+          display: inline-block;
+          animation: .9s blink step-end infinite;
+
+          @keyframes blink {
+            from, to {
+              background: none;
+            }
+            50% {
+              background-color: $accent;
+            }
+          }
+        }
+      }
+
+      .buttons {
+        margin-top: 30px;
+        text-align: center;
+        transition: all 1s ease-in-out;
+
+        &.hide {
+          opacity: 0;
+          height: 0;
+        }
+
+        &.show {
+          opacity: 1;
+          height: 50px;
+        }
+      }
+    }
+  }
 </style>
