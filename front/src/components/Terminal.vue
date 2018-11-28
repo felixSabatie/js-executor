@@ -1,7 +1,15 @@
 <template>
   <div class="terminal-wrapper">
     <div class="terminal">
-      <div class="title">Results</div>
+      <div class="header">
+        <div class="title">
+          Results
+        </div>
+        <div class="erase" @click="eraseLogs">
+          Clear all
+          <font-awesome-icon class="icon" icon="trash" />
+        </div>
+      </div>
       <div class="logs">
         <div class="log" v-for="log in logs" :class="{error: log.isError, warn: log.isWarning}">
           {{log.message}}
@@ -28,6 +36,11 @@
           this.domLogs.scrollTop = this.domLogs.scrollHeight
         })
       }
+    },
+    methods: {
+      eraseLogs() {
+        this.$emit('erase-logs')
+      }
     }
   }
 </script>
@@ -49,12 +62,27 @@
       color: $white-text;
       overflow: auto;
 
-      .title {
+      .header {
         padding: 10px;
         color: $grey-text;
         background-color: $darker-background;
         position: sticky;
         top: 0;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        .erase {
+          cursor: pointer;
+          font-size: 13px;
+          .icon {
+            margin-left: 5px;
+            color: $accent;
+            font-size: 11px;
+          }
+        }
       }
 
       .logs {

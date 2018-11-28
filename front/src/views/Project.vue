@@ -6,7 +6,7 @@
         <Editor @text-changed="textChanged" :default-text="defaultText" />
       </div>
       <div class="terminal-container">
-        <Terminal :logs="logs" />
+        <Terminal :logs="logs" @erase-logs="eraseLogs" />
       </div>
       <div class="chat-container">
         <Chat />
@@ -59,6 +59,9 @@
       textChanged(newValue) {
         this.editorData = newValue
         this.changesSaved = false
+      },
+      eraseLogs() {
+        this.logs = []
       },
       run() {
         this.logs.push({
