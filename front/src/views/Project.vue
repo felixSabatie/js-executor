@@ -1,7 +1,7 @@
 <template>
   <div class="project">
     <Navbar @run="run" @save="save" :changes-saved="changesSaved" />
-    <div class="project-content" v-if="defaultText">
+    <div class="project-content" v-if="defaultTextLoaded">
       <div class="editor-container">
         <Editor @text-changed="textChanged" :default-text="defaultText" />
       </div>
@@ -35,7 +35,8 @@
         editorData: '',
         logs: [],
         projectUrl: '',
-        changesSaved: true
+        changesSaved: true,
+        defaultTextLoaded: false,
       }
     },
     components: {Editor, Chat, Terminal, Navbar, Loader},
@@ -44,6 +45,7 @@
 
       axios.get(this.projectUrl).then(response => {
         this.defaultText = response.data
+        this.defaultTextLoaded = true
       }).catch(err => {
         if(err.response && err.response.status === 404) {
           // TODO 404 page

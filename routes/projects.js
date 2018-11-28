@@ -8,7 +8,7 @@ const restoreConsoleFunctions = require('../utils/console-redirector').restoreCo
 router.post('/', function(req, res) {
   const hash = crypto.randomBytes(20).toString('hex')
 
-  const baseData = "function hello() {\nconsole.log('Hello world!');\n}\n\nhello();"
+  const baseData = "function hello() {\n\tconsole.log('Hello world!');\n}\n\nhello();"
 
   writeDataToFile(hash, baseData).then(() => {
     console.log(`New project file created : ${hash}.js`)
