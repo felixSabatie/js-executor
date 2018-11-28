@@ -13,6 +13,9 @@
 </template>
 
 <script>
+  import axios from 'axios'
+  import {serverUrl} from '../../env';
+
   export default {
     data() {
       return {
@@ -37,7 +40,11 @@
       },
 
       generateProject() {
-        this.$router.push({name: 'project'})
+        axios.post(`${serverUrl}/api/projects`).then(response => {
+          this.$router.push({name: 'project', params: { hash: response.data }})
+        }).catch(err => {
+          console.error(err)
+        })
       }
     }
   }

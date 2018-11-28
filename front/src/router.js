@@ -15,7 +15,7 @@ export default new Router({
       component: Home
     },
     {
-      path: '/project',
+      path: '/projects/:hash',
       name: 'project',
       component: Project
     }

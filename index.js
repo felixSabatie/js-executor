@@ -8,6 +8,8 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 
+global.__basedir = __dirname
+
 // CORS
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

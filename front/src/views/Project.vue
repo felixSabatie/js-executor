@@ -1,7 +1,7 @@
 <template>
   <div class="project">
     <Navbar @run="run" />
-    <div class="project-content">
+    <div class="project-content" v-if="defaultText">
       <div class="editor-container">
         <Editor @text-changed="textChanged" :default-text="defaultText" />
       </div>
@@ -26,12 +26,24 @@
   export default {
     data() {
       return {
-        defaultText: "function hello() {\n\tconsole.log('Hello world!');\n}\n\nhello();",
-        editorData: "function hello() {\n\tconsole.log('Hello world!');\n}\n\nhello();",
+        defaultText: '',
+        editorData: '',
         logs: []
       }
     },
     components: {Editor, Chat, Terminal, Navbar},
+    mounted() {
+      axios.get(`${serverUrl}/api/projects/${this.$route.params.hash}`).then(response => {
+        this.defaultText = response.data
+      }).catch(err => {
+        if(err.response && err.response.status === 404) {
+          // TODO 404 page
+          this.$router.push({name: 'home'})
+        } else {
+          console.error(err)
+        }
+      })
+    },
     methods: {
       textChanged(newValue) {
         this.editorData = newValue
