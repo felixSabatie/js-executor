@@ -4,9 +4,11 @@
       JS EXECUTOR
     </router-link>
     <ul class="content">
-      <li class="item">Share</li>
+      <li class="item">
+        <span class="text">Share</span><font-awesome-icon class="icon" icon="share-alt" />
+      </li>
       <li class="item run-button" @click="run">
-        <span class="run-text">Run</span><font-awesome-icon class="play-icon" icon="play" />
+        <span class="text">Run</span><font-awesome-icon class="icon" icon="play" />
       </li>
     </ul>
   </div>
@@ -49,6 +51,10 @@
       color: $white-text;
       text-decoration: none;
 
+      .text {
+        margin-right: 10px;
+      }
+
       &:before {
         content: '';
         position: absolute;
@@ -76,11 +82,10 @@
       padding: 0;
 
       .run-button {
-        .run-text {
-          margin-right: 10px;
+        .text {
           transition: margin-right .3s ease-in-out;
         }
-        .play-icon {
+        .icon {
           transition: transform .3s ease-in-out;
         }
 

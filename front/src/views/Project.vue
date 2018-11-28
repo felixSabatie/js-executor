@@ -12,6 +12,10 @@
         <Chat />
       </div>
     </div>
+
+    <div v-else class="loader-container">
+      <Loader />
+    </div>
   </div>
 </template>
 
@@ -20,6 +24,7 @@
   import Chat from '../components/Chat'
   import Terminal from '../components/Terminal'
   import Navbar from '../components/Navbar'
+  import Loader from '../components/Loader'
   import axios from 'axios'
   import {serverUrl} from '../../env'
 
@@ -31,10 +36,10 @@
         logs: []
       }
     },
-    components: {Editor, Chat, Terminal, Navbar},
+    components: {Editor, Chat, Terminal, Navbar, Loader},
     mounted() {
       axios.get(`${serverUrl}/api/projects/${this.$route.params.hash}`).then(response => {
-        this.defaultText = response.data
+        // this.defaultText = response.data
       }).catch(err => {
         if(err.response && err.response.status === 404) {
           // TODO 404 page
@@ -92,6 +97,10 @@
         grid-column: 2 / 3;
         grid-row: 2 / 3;
       }
+    }
+
+    .loader-container {
+      margin-top: 20px;
     }
   }
 </style>
