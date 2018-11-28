@@ -1,6 +1,6 @@
 <template>
   <div class="project">
-    <Navbar @run="run" />
+    <Navbar @run="run" @save="save" :changes-saved="changesSaved" />
     <div class="project-content" v-if="defaultText">
       <div class="editor-container">
         <Editor @text-changed="textChanged" :default-text="defaultText" />
@@ -34,7 +34,8 @@
         defaultText: '',
         editorData: '',
         logs: [],
-        projectUrl: ''
+        projectUrl: '',
+        changesSaved: true
       }
     },
     components: {Editor, Chat, Terminal, Navbar, Loader},
@@ -55,6 +56,7 @@
     methods: {
       textChanged(newValue) {
         this.editorData = newValue
+        this.changesSaved = false
       },
       run() {
         this.logs.push({
@@ -63,14 +65,24 @@
           isWarning: false
         })
 
-        axios.put(this.projectUrl, {
-          code: this.editorData
-        }).then(() => {
+        this.saveProjectToServer().then(() => {
+          this.changesSaved = true
+
           axios.post(`${serverUrl}/api/projects/${this.$route.params.hash}/execute`).then(response => {
             this.logs.push(...response.data)
           })
         }).catch(err => {
           console.error(err)
+        })
+      },
+      save() {
+        this.saveProjectToServer().then(() => {
+          this.changesSaved = true
+        })
+      },
+      saveProjectToServer() {
+        return axios.put(this.projectUrl, {
+          code: this.editorData
         })
       }
     }

@@ -7,6 +7,11 @@
       <li class="item">
         <span class="text">Share</span><font-awesome-icon class="icon" icon="share-alt" />
       </li>
+      <li class="item" @click="save">
+        <font-awesome-icon class="icon circle" icon="circle" v-if="!changesSaved" />
+        <span class="text">Save</span>
+        <font-awesome-icon class="icon" icon="save" />
+      </li>
       <li class="item run-button" @click="run">
         <span class="text">Run</span><font-awesome-icon class="icon" icon="play" />
       </li>
@@ -16,9 +21,13 @@
 
 <script>
   export default {
+    props: ['changesSaved'],
     methods: {
       run() {
         this.$emit('run')
+      },
+      save() {
+        this.$emit('save')
       }
     }
   }
@@ -97,6 +106,11 @@
             transform: scale(1.2);
           }
         }
+      }
+
+      .circle {
+        margin-right: 5px;
+        font-size: 10px;
       }
     }
   }
