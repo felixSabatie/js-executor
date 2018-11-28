@@ -33,13 +33,16 @@
       return {
         defaultText: '',
         editorData: '',
-        logs: []
+        logs: [],
+        projectUrl: ''
       }
     },
     components: {Editor, Chat, Terminal, Navbar, Loader},
     mounted() {
-      axios.get(`${serverUrl}/api/projects/${this.$route.params.hash}`).then(response => {
-        // this.defaultText = response.data
+      this.projectUrl = `${serverUrl}/api/projects/${this.$route.params.hash}`
+
+      axios.get(this.projectUrl).then(response => {
+        this.defaultText = response.data
       }).catch(err => {
         if(err.response && err.response.status === 404) {
           // TODO 404 page
@@ -59,10 +62,15 @@
           isError: false,
           isWarning: false
         })
-        axios.post(`${serverUrl}/api/projects/aze/execute`, {
-          function: this.editorData
-        }).then(response => {
-          this.logs.push(...response.data)
+
+        axios.put(this.projectUrl, {
+          code: this.editorData
+        }).then(() => {
+          axios.post(`${serverUrl}/api/projects/${this.$route.params.hash}/execute`).then(response => {
+            this.logs.push(...response.data)
+          })
+        }).catch(err => {
+          console.error(err)
         })
       }
     }

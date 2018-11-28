@@ -90,10 +90,10 @@
         }
 
         &:hover {
-          .run-text {
+          .text {
             margin-right: 15px;
           }
-          .play-icon {
+          .icon {
             transform: scale(1.2);
           }
         }

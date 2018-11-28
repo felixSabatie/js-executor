@@ -5,6 +5,20 @@ const crypto = require('crypto')
 const redirectConsoleToFunctions = require('../utils/console-redirector').redirectConsoleToFunctions
 const restoreConsoleFunctions = require('../utils/console-redirector').restoreConsoleFunctions
 
+router.post('/', function(req, res) {
+  const hash = crypto.randomBytes(20).toString('hex')
+
+  const baseData = "function hello() {\nconsole.log('Hello world!');\n}\n\nhello();"
+
+  writeDataToFile(hash, baseData).then(() => {
+    console.log(`New project file created : ${hash}.js`)
+    res.send(hash)
+  }).catch(err => {
+    res.status(500)
+    res.send('error')
+  })
+})
+
 router.get('/:hash', function(req, res) {
   const filepath = `${__basedir}/projects/${req.params.hash}.js`;
 
@@ -23,18 +37,12 @@ router.get('/:hash', function(req, res) {
   })
 })
 
-router.post('/', function(req, res) {
-  const hash = crypto.randomBytes(20).toString('hex')
-
-  const filepath = `${__basedir}/projects/${hash}.js`;
-  const baseData = "function hello() {\nconsole.log('Hello world!');\n}\n\nhello();"
-
-  fs.writeFile(filepath, baseData, 'utf8', (err) => {
-    if (err) throw err;
-
-    console.log(`New project file created : ${hash}.js`)
-
-    res.send(hash)
+router.put('/:hash', function(req, res) {
+  writeDataToFile(req.params.hash, req.body.code).then(() => {
+    res.send('success')
+  }).catch(err => {
+    res.status(500)
+    res.send('error')
   })
 })
 
@@ -64,17 +72,58 @@ router.post('/:hash/execute', function (req, res) {
 
   console.log('Executing...')
   redirectConsoleToFunctions(consoleLog, consoleWarn, consoleError)
-  try {
-    // let userFunction = Function(req.body.function)
-    // userFunction()
-    eval(req.body.function)
-  } catch(err) {
-    console.error(err.toString())
-  }
-  restoreConsoleFunctions()
-  console.log('Done')
 
-  res.send(logs)
+  executeFile(req.params.hash).then(() => {
+    restoreConsoleFunctions()
+    console.log('Done')
+    res.send(logs)
+  }).catch(err => {
+    if(err.code === 'ENOENT') {
+      res.status(404)
+      res.send('not found')
+    } else {
+      res.status(500)
+      res.send('error')
+    }
+  })
 })
+
+const executeFile = function(hash) {
+  return new Promise((resolve, reject) => {
+    const filepath = getFilePath(hash)
+
+    fs.readFile(filepath, 'utf8', function(error, data) {
+      if(error) {
+        reject(error)
+      } else {
+        try {
+          eval(data)
+        } catch(err) {
+          console.error(err.toString())
+        } finally {
+          resolve()
+        }
+      }
+    })
+  })
+}
+
+const writeDataToFile = function(hash, data) {
+  const filepath = getFilePath(hash)
+
+  return new Promise((resolve, reject) => {
+    fs.writeFile(filepath, data, 'utf8', (err) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve()
+      }
+    })
+  })
+}
+
+const getFilePath = function(hash) {
+  return `${__basedir}/projects/${hash}.js`
+}
 
 module.exports = router
