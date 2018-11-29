@@ -90,6 +90,7 @@
         font-family: Inconsolata, monospace;
 
         .log {
+          min-height: 10px;
           &.error {
             color: $error-text;
           }

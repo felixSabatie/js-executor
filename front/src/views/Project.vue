@@ -45,6 +45,7 @@
 
       axios.get(this.projectUrl).then(response => {
         this.defaultText = response.data
+        this.editorData = response.data
         this.defaultTextLoaded = true
       }).catch(err => {
         if(err.response && err.response.status === 404) {
@@ -75,6 +76,11 @@
 
           axios.post(`${serverUrl}/api/projects/${this.$route.params.hash}/execute`).then(response => {
             this.logs.push(...response.data)
+            this.logs.push({
+              message: ' ',
+              isError: false,
+              isWarning: false
+            })
           })
         }).catch(err => {
           console.error(err)
