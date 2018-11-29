@@ -37,6 +37,7 @@
         projectUrl: '',
         changesSaved: true,
         defaultTextLoaded: false,
+        timeout: {},
       }
     },
     components: {Editor, Chat, Terminal, Navbar, Loader},
@@ -60,6 +61,10 @@
       textChanged(newValue) {
         this.editorData = newValue
         this.changesSaved = false
+        clearTimeout(this.timeout)
+        this.timeout = setTimeout(() => {
+          this.save()
+        }, 2000)
       },
       eraseLogs() {
         this.logs = []
