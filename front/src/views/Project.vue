@@ -1,5 +1,5 @@
 <template>
-  <div class="project">
+  <div class="project" @keyup.ctrl.enter.prevent="run">
     <Navbar @run="run" @save="save" :changes-saved="changesSaved" />
     <div class="project-content" v-if="defaultTextLoaded">
       <div class="editor-container">
