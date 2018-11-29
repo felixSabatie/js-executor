@@ -4,9 +4,16 @@
       JS EXECUTOR
     </router-link>
     <ul class="content">
-      <li class="item">Share</li>
+      <li class="item">
+        <span class="text">Share</span><font-awesome-icon class="icon" icon="share-alt" />
+      </li>
+      <li class="item" @click="save">
+        <font-awesome-icon class="icon circle" icon="circle" v-if="!changesSaved" />
+        <span class="text">Save</span>
+        <font-awesome-icon class="icon" icon="save" />
+      </li>
       <li class="item run-button" @click="run">
-        <span class="run-text">Run</span><font-awesome-icon class="play-icon" icon="play" />
+        <span class="text">Run</span><font-awesome-icon class="icon" icon="play" />
       </li>
     </ul>
   </div>
@@ -14,9 +21,13 @@
 
 <script>
   export default {
+    props: ['changesSaved'],
     methods: {
       run() {
         this.$emit('run')
+      },
+      save() {
+        this.$emit('save')
       }
     }
   }
@@ -49,6 +60,10 @@
       color: $white-text;
       text-decoration: none;
 
+      .text {
+        margin-right: 10px;
+      }
+
       &:before {
         content: '';
         position: absolute;
@@ -76,22 +91,26 @@
       padding: 0;
 
       .run-button {
-        .run-text {
-          margin-right: 10px;
+        .text {
           transition: margin-right .3s ease-in-out;
         }
-        .play-icon {
+        .icon {
           transition: transform .3s ease-in-out;
         }
 
         &:hover {
-          .run-text {
+          .text {
             margin-right: 15px;
           }
-          .play-icon {
+          .icon {
             transform: scale(1.2);
           }
         }
+      }
+
+      .circle {
+        margin-right: 5px;
+        font-size: 10px;
       }
     }
   }

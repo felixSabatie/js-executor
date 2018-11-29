@@ -1,16 +1,20 @@
 <template>
   <div class="project">
-    <Navbar @run="run" />
-    <div class="project-content">
+    <Navbar @run="run" @save="save" :changes-saved="changesSaved" />
+    <div class="project-content" v-if="defaultTextLoaded">
       <div class="editor-container">
         <Editor @text-changed="textChanged" :default-text="defaultText" />
       </div>
       <div class="terminal-container">
-        <Terminal :logs="logs" />
+        <Terminal :logs="logs" @erase-logs="eraseLogs" />
       </div>
       <div class="chat-container">
         <Chat />
       </div>
+    </div>
+
+    <div v-else class="loader-container">
+      <Loader />
     </div>
   </div>
 </template>
@@ -20,21 +24,45 @@
   import Chat from '../components/Chat'
   import Terminal from '../components/Terminal'
   import Navbar from '../components/Navbar'
+  import Loader from '../components/Loader'
   import axios from 'axios'
   import {serverUrl} from '../../env'
 
   export default {
     data() {
       return {
-        defaultText: "function hello() {\n\tconsole.log('Hello world!');\n}\n\nhello();",
-        editorData: "function hello() {\n\tconsole.log('Hello world!');\n}\n\nhello();",
-        logs: []
+        defaultText: '',
+        editorData: '',
+        logs: [],
+        projectUrl: '',
+        changesSaved: true,
+        defaultTextLoaded: false,
       }
     },
-    components: {Editor, Chat, Terminal, Navbar},
+    components: {Editor, Chat, Terminal, Navbar, Loader},
+    mounted() {
+      this.projectUrl = `${serverUrl}/api/projects/${this.$route.params.hash}`
+
+      axios.get(this.projectUrl).then(response => {
+        this.defaultText = response.data
+        this.editorData = response.data
+        this.defaultTextLoaded = true
+      }).catch(err => {
+        if(err.response && err.response.status === 404) {
+          // TODO 404 page
+          this.$router.push({name: 'home'})
+        } else {
+          console.error(err)
+        }
+      })
+    },
     methods: {
       textChanged(newValue) {
         this.editorData = newValue
+        this.changesSaved = false
+      },
+      eraseLogs() {
+        this.logs = []
       },
       run() {
         this.logs.push({
@@ -42,10 +70,30 @@
           isError: false,
           isWarning: false
         })
-        axios.post(`${serverUrl}/api/projects/aze/execute`, {
-          function: this.editorData
-        }).then(response => {
-          this.logs.push(...response.data)
+
+        this.saveProjectToServer().then(() => {
+          this.changesSaved = true
+
+          axios.post(`${serverUrl}/api/projects/${this.$route.params.hash}/execute`).then(response => {
+            this.logs.push(...response.data)
+            this.logs.push({
+              message: ' ',
+              isError: false,
+              isWarning: false
+            })
+          })
+        }).catch(err => {
+          console.error(err)
+        })
+      },
+      save() {
+        this.saveProjectToServer().then(() => {
+          this.changesSaved = true
+        })
+      },
+      saveProjectToServer() {
+        return axios.put(this.projectUrl, {
+          code: this.editorData
         })
       }
     }
@@ -80,6 +128,10 @@
         grid-column: 2 / 3;
         grid-row: 2 / 3;
       }
+    }
+
+    .loader-container {
+      margin-top: 20px;
     }
   }
 </style>
