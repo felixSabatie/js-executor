@@ -1,5 +1,5 @@
 <template>
-  <div class="project">
+  <div class="project" @keyup.ctrl.enter.prevent="run">
     <Navbar @run="run" @save="save" :changes-saved="changesSaved" />
     <div class="project-content" v-if="defaultTextLoaded">
       <div class="editor-container">
@@ -37,6 +37,7 @@
         projectUrl: '',
         changesSaved: true,
         defaultTextLoaded: false,
+        timeout: {},
       }
     },
     components: {Editor, Chat, Terminal, Navbar, Loader},
@@ -60,6 +61,10 @@
       textChanged(newValue) {
         this.editorData = newValue
         this.changesSaved = false
+        clearTimeout(this.timeout)
+        this.timeout = setTimeout(() => {
+          this.save()
+        }, 2000)
       },
       eraseLogs() {
         this.logs = []
