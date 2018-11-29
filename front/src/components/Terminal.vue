@@ -1,15 +1,15 @@
 <template>
-  <div class="terminal-wrapper">
-    <div class="terminal">
-      <div class="header">
-        <div class="title">
-          Results
-        </div>
-        <div class="erase" @click="eraseLogs">
-          Clear all
-          <font-awesome-icon class="icon" icon="trash" />
-        </div>
+  <div class="terminal">
+    <div class="header">
+      <div class="title">
+        Results
       </div>
+      <div class="erase" @click="eraseLogs">
+        Clear all
+        <font-awesome-icon class="icon" icon="trash" />
+      </div>
+    </div>
+    <div class="logs-wrapper">
       <div class="logs">
         <div class="log" v-for="log in logs" :class="{error: log.isError, warn: log.isWarning}">
           {{log.message}}
@@ -28,7 +28,7 @@
     },
     props: ['logs'],
     mounted() {
-      this.domLogs = this.$el.querySelector('.terminal')
+      this.domLogs = this.$el.querySelector('.terminal .logs')
     },
     watch: {
       logs() {
@@ -48,44 +48,45 @@
 <style lang="scss">
   @import '../styles/colors';
 
-  .terminal-wrapper {
-    position: relative;
+  .terminal {
+    color: $white-text;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 
-    .terminal {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+    .header {
+      padding: 10px;
+      color: $grey-text;
+      background-color: $darker-background;
 
-      color: $white-text;
-      overflow: auto;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
 
-      .header {
-        padding: 10px;
-        color: $grey-text;
-        background-color: $darker-background;
-        position: sticky;
-        top: 0;
-
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-
-        .erase {
-          cursor: pointer;
-          font-size: 13px;
-          .icon {
-            margin-left: 5px;
-            color: $accent;
-            font-size: 11px;
-          }
+      .erase {
+        cursor: pointer;
+        font-size: 13px;
+        .icon {
+          margin-left: 5px;
+          color: $accent;
+          font-size: 11px;
         }
       }
+    }
+
+    .logs-wrapper {
+      position: relative;
+      flex: 1;
 
       .logs {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: auto;
+
         padding: 10px;
         font-family: Inconsolata, monospace;
 
