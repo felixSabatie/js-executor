@@ -42,12 +42,15 @@
     },
     components: {Editor, Chat, Terminal, Navbar, Loader},
     mounted() {
-      this.projectUrl = `${serverUrl}/api/projects/${this.$route.params.hash}`
+      const projectHash = this.$route.params.hash
+      this.projectUrl = `${serverUrl}/api/projects/${projectHash}`
 
       axios.get(this.projectUrl).then(response => {
         this.defaultText = response.data
         this.editorData = response.data
         this.defaultTextLoaded = true
+
+        this.$socket.emit('connectedOnProject', projectHash)
       }).catch(err => {
         if(err.response && err.response.status === 404) {
           // TODO 404 page
@@ -58,13 +61,16 @@
       })
     },
     methods: {
-      textChanged(newValue) {
+      textChanged(newValue, changes) {
         this.editorData = newValue
         this.changesSaved = false
         clearTimeout(this.timeout)
         this.timeout = setTimeout(() => {
           this.save()
         }, 2000)
+
+        changes.changes[0].rangeLength = 1
+        this.$socket.emit('editedText', changes)
       },
       eraseLogs() {
         this.logs = []
