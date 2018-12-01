@@ -7,9 +7,15 @@
   import * as monaco from 'monaco-editor'
 
   export default {
+    data() {
+      return {
+        editor: {},
+        receivingModifications: false
+      }
+    },
     props: ['defaultText'],
     mounted() {
-      let editor = monaco.editor.create(document.getElementById("editor"), {
+      this.editor = monaco.editor.create(document.getElementById("editor"), {
         value: this.defaultText,
         language: 'javascript',
         theme: 'vs-dark',
@@ -17,15 +23,24 @@
         wordBasedSuggestions: true,
         automaticLayout: true,
       })
-      editor.onDidChangeModelContent(() => {
-        this.$emit('text-changed', editor.getValue())
-        // TODO send to server every 500ms --> Save last version and last sent version and do a timeout to ignore changes in between
+      this.editor.onDidChangeModelContent((changes) => {
+        if(!this.receivingModifications)
+          this.$emit('text-changed', this.editor.getValue(), changes)
       })
 
       window.addEventListener('resize', () => {
-        editor.layout()
+        this.editor.layout()
       })
-    }
+    },
+    sockets: {
+      editedText(edits) {
+        this.receivingModifications = true
+        this.editor.executeEdits('', edits.changes)
+        this.$nextTick(() => {
+          this.receivingModifications = false
+        })
+      }
+    },
   }
 </script>
 
