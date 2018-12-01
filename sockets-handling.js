@@ -20,6 +20,13 @@ const handleSockets = (http) => {
     socket.on('editedText', function(newText) {
       socket.broadcast.to(currentProject).emit('editedText', newText)
     })
+
+    socket.on('cursorMoved', function(position) {
+      socket.broadcast.to(currentProject).emit('cursorMoved', {
+        id: socket.id,
+        position
+      })
+    })
   })
 }
 
