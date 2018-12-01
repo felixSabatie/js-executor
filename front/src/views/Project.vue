@@ -27,7 +27,6 @@
   import Loader from '../components/Loader'
   import axios from 'axios'
   import {serverUrl} from '../../env'
-  import io from 'socket.io-client'
 
   export default {
     data() {
@@ -49,8 +48,6 @@
         this.defaultText = response.data
         this.editorData = response.data
         this.defaultTextLoaded = true
-
-        let socket = io(serverUrl)
       }).catch(err => {
         if(err.response && err.response.status === 404) {
           // TODO 404 page
