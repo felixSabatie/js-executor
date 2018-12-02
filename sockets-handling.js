@@ -44,6 +44,13 @@ const handleSockets = (http) => {
         socket.broadcast.to(currentProject).emit('users', Array.from(projects.get(currentProject)))
       }
     })
+
+    socket.on('newLogs', function(newLogs) {
+      socket.broadcast.to(currentProject).emit('newLogs', {
+        from: 'aze',  // TODO put name
+        logs: newLogs
+      })
+    })
   })
 }
 

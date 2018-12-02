@@ -60,6 +60,16 @@
         }
       })
     },
+    sockets: {
+      newLogs(infos) {
+        this.logs.push({
+          message: `running from ${infos.from}...`,
+          isError: false,
+          isWarning: false
+        })
+        this.displayLogs(infos.logs)
+      }
+    },
     methods: {
       textChanged(newValue) {
         this.editorData = newValue
@@ -90,15 +100,19 @@
           this.changesSaved = true
 
           axios.post(`${serverUrl}/api/projects/${this.$route.params.hash}/execute`).then(response => {
-            this.logs.push(...response.data)
-            this.logs.push({
-              message: ' ',
-              isError: false,
-              isWarning: false
-            })
+            this.displayLogs(response.data)
+            this.$socket.emit('newLogs', response.data)
           })
         }).catch(err => {
           console.error(err)
+        })
+      },
+      displayLogs(logs) {
+        this.logs.push(...logs)
+        this.logs.push({
+          message: ' ',
+          isError: false,
+          isWarning: false
         })
       },
       save() {
