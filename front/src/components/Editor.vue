@@ -26,8 +26,11 @@
         automaticLayout: true,
       })
       this.editor.onDidChangeModelContent((changes) => {
-        if(!this.receivingModifications)
-          this.$emit('text-changed', this.editor.getValue(), changes)
+        if(!this.receivingModifications) {
+          this.$emit('user-changed', this.editor.getValue(), changes)
+        } else {
+          this.$emit('received-change', this.editor.getValue())
+        }
       })
       this.editor.onDidChangeCursorPosition((event) => {
         this.$socket.emit('cursorMoved', event.position)
