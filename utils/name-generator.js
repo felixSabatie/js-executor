@@ -1,29 +1,36 @@
 const animalNames = [
-    'Lion',
-    'Lapin',
-    'Ours',
-    'Requin',
-    'Renard',
-    'Cheval',
-    'Crocodile',
-    'Panda',
-    'Hiboux'
+  'Lion',
+  'Lapin',
+  'Ours',
+  'Requin',
+  'Renard',
+  'Cheval',
+  'Crocodile',
+  'Panda',
+  'Hiboux'
 ]
 
 const adjective = [
-    'calme',
-    'rapide',
-    'paresseux',
-    'comique',
-    'fidèle',
-    'bavard',
-    'robuste'
+  'calme',
+  'rapide',
+  'paresseux',
+  'comique',
+  'fidèle',
+  'bavard',
+  'robuste'
 ]
 
+const names = []
+
 const getName = () => {
-  const chosenAnimal = animalNames[Math.floor(Math.random()*animalNames.length)];
-  const chosenAdjective = adjective[Math.floor(Math.random()*adjective.length)];
-  return chosenAnimal + " " + chosenAdjective;
+  if (names.length === 0) {
+    for(let i=0 ; i < animalNames.length ; i++){
+      for(let j=0 ; j < adjective.length ; j++){
+        names.push(animalNames[i] + " " + adjective[j])
+      }
+    }
+  }
+  return names.splice(Math.floor(Math.random()* names.length), 1)[0];
 }
 
 exports.getName = getName
