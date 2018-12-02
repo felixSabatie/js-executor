@@ -3,7 +3,7 @@
     <Navbar @run="run" @save="save" :changes-saved="changesSaved" />
     <div class="project-content" v-if="defaultTextLoaded">
       <div class="editor-container">
-        <Editor @text-changed="textChanged" :default-text="defaultText" />
+        <Editor @user-changed="userChanged" @received-change="receivedChange" :default-text="defaultText" />
       </div>
       <div class="terminal-container">
         <Terminal :logs="logs" @erase-logs="eraseLogs" />
@@ -61,16 +61,20 @@
       })
     },
     methods: {
-      textChanged(newValue, changes) {
+      textChanged(newValue) {
         this.editorData = newValue
         this.changesSaved = false
         clearTimeout(this.timeout)
         this.timeout = setTimeout(() => {
           this.save()
         }, 2000)
-
-        changes.changes[0].rangeLength = 1
+      },
+      userChanged(newValue, changes) {
+        this.textChanged(newValue)
         this.$socket.emit('editedText', changes)
+      },
+      receivedChange(newValue) {
+        this.textChanged(newValue)
       },
       eraseLogs() {
         this.logs = []

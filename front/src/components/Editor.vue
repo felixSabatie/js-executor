@@ -10,7 +10,9 @@
     data() {
       return {
         editor: {},
-        receivingModifications: false
+        receivingModifications: false,
+        decorations: [],
+        currentUser: ''
       }
     },
     props: ['defaultText'],
@@ -24,8 +26,14 @@
         automaticLayout: true,
       })
       this.editor.onDidChangeModelContent((changes) => {
-        if(!this.receivingModifications)
-          this.$emit('text-changed', this.editor.getValue(), changes)
+        if(!this.receivingModifications) {
+          this.$emit('user-changed', this.editor.getValue(), changes)
+        } else {
+          this.$emit('received-change', this.editor.getValue())
+        }
+      })
+      this.editor.onDidChangeCursorPosition((event) => {
+        this.$socket.emit('cursorMoved', event.position)
       })
 
       window.addEventListener('resize', () => {
@@ -39,13 +47,68 @@
         this.$nextTick(() => {
           this.receivingModifications = false
         })
+      },
+      users(users) {
+        if(users) {
+          let i = 0
+          let newDecorations = []
+          users.forEach((value) => {
+            let [key, user] = value
+            if(key !== this.currentUser && user.cursor.lineNumber && user.cursor.column) {
+              newDecorations.push({
+                range: new monaco.Range(user.cursor.lineNumber, user.cursor.column, user.cursor.lineNumber, user.cursor.column + 1),
+                options: { className: 'my-cursor cursor-' + (i % 5 + 1) }
+              })
+
+              i++
+            }
+          })
+
+          this.decorations = this.editor.deltaDecorations(this.decorations, newDecorations)
+        }
+
+      },
+      currentUser(currentUser) {
+        this.currentUser = currentUser
       }
     },
   }
 </script>
 
 <style lang="scss">
+  @import '../styles/colors';
+
   #editor {
     height: 100%;
+
+    .my-cursor {
+      width: 2px !important;
+      animation: 1s blink step-end infinite;
+
+      &.cursor-1 {
+        background: $accent;
+      }
+      &.cursor-2 {
+        background: $accent2;
+      }
+      &.cursor-3 {
+        background: $accent3;
+      }
+      &.cursor-4 {
+        background: $accent4;
+      }
+      &.cursor-5 {
+        background: $accent5;
+      }
+
+      @keyframes blink {
+        from, to {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+    }
   }
 </style>
