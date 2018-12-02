@@ -1,6 +1,6 @@
 <template>
   <div class="project" @keyup.ctrl.enter.prevent="run">
-    <Navbar @run="run" @save="save" :changes-saved="changesSaved" />
+    <Navbar @run="run" @save="save" @share="share" :changes-saved="changesSaved" :display-copied-text="displayCopiedText" />
     <div class="project-content" v-if="defaultTextLoaded">
       <div class="editor-container">
         <Editor @user-changed="userChanged" @received-change="receivedChange" :default-text="defaultText" />
@@ -38,6 +38,7 @@
         changesSaved: true,
         defaultTextLoaded: false,
         timeout: {},
+        displayCopiedText: false
       }
     },
     components: {Editor, Chat, Terminal, Navbar, Loader},
@@ -131,6 +132,14 @@
             this.$socket.emit('saved')
             resolve(response)
           }).catch(err => reject(err))
+        })
+      },
+      share() {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          this.displayCopiedText = true
+          setTimeout(() => {
+            this.displayCopiedText = false
+          }, 2000)
         })
       }
     }

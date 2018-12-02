@@ -4,8 +4,12 @@
       JS EXECUTOR
     </router-link>
     <ul class="content">
-      <li class="item">
-        <span class="text">Share</span><font-awesome-icon class="icon" icon="share-alt" />
+      <li class="item" @click="share">
+        <span class="text">
+          <span v-if="displayCopiedText">URL copied to clipboard !</span>
+          <span v-else>Share</span>
+        </span>
+        <font-awesome-icon class="icon" icon="share-alt" />
       </li>
       <li class="item" @click="save">
         <font-awesome-icon class="icon circle" icon="circle" v-if="!changesSaved" />
@@ -21,13 +25,16 @@
 
 <script>
   export default {
-    props: ['changesSaved'],
+    props: ['changesSaved', 'displayCopiedText'],
     methods: {
       run() {
         this.$emit('run')
       },
       save() {
         this.$emit('save')
+      },
+      share() {
+        this.$emit('share')
       }
     }
   }
