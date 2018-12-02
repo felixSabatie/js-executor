@@ -11,8 +11,8 @@
       return {
         editor: {},
         receivingModifications: false,
-        cursors: [],
-        decorations: []
+        decorations: [],
+        currentUser: ''
       }
     },
     props: ['defaultText'],
@@ -45,23 +45,28 @@
           this.receivingModifications = false
         })
       },
-      cursorMoved(infos) {
-        this.cursors[infos.id] = infos.position
-        console.log(this.cursors)
+      users(users) {
+        if(users) {
+          let i = 0
+          let newDecorations = []
+          users.forEach((value) => {
+            let [key, user] = value
+            if(key !== this.currentUser && user.cursor.lineNumber && user.cursor.column) {
+              newDecorations.push({
+                range: new monaco.Range(user.cursor.lineNumber, user.cursor.column, user.cursor.lineNumber, user.cursor.column + 1),
+                options: { className: 'my-cursor cursor-' + (i % 5 + 1) }
+              })
 
-        let i = 0
-        let newDecorations = []
-        for(let key in this.cursors) {
-          newDecorations.push({
-            range: new monaco.Range(this.cursors[key].lineNumber, this.cursors[key].column, this.cursors[key].lineNumber, this.cursors[key].column + 1),
-            options: { className: 'my-cursor cursor-' + (i % 5 + 1) }
+              i++
+            }
           })
 
-          i++
+          this.decorations = this.editor.deltaDecorations(this.decorations, newDecorations)
         }
-        console.log(newDecorations)
 
-        this.decorations = this.editor.deltaDecorations(this.decorations, newDecorations)
+      },
+      currentUser(currentUser) {
+        this.currentUser = currentUser
       }
     },
   }
