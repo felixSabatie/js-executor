@@ -11,12 +11,15 @@
     </div>
     <div class="messages-wrapper">
       <div class="messages">
-        <div v-for="message in messages">
-          <div class="messageSystem" v-if="message.userName==='System'">
+        <div v-for="(message, index) in messages">
+          <div class="message-system" v-if="message.userName==='System'">
             {{message.content}}
           </div>
           <div class="message" v-else>
-            {{message.userName}} : {{message.content}}
+            <span class="user-name" v-if="index === 0 || messages[index-1].userName !== message.userName">
+              {{message.userName}} :
+            </span>
+            <span class="content">{{message.content}}</span>
           </div>
         </div>
       </div>
@@ -60,12 +63,14 @@
         this.messages = []
       },
       sendMessage() {
-        this.messages.push({
-              userName: 'Vous',
-              content: this.contentMessage
-            })
-        this.$socket.emit('messageSent', this.contentMessage)
-        this.contentMessage = ''
+        if (this.contentMessage !== "") {
+          this.messages.push({
+            userName: 'Vous',
+            content: this.contentMessage
+          })
+          this.$socket.emit('messageSent', this.contentMessage)
+          this.contentMessage = ''
+        }
       }
     }
   }
@@ -102,7 +107,7 @@
     }
 
     .messages-wrapper {
-      background-color: white;
+      background-color: $dark-background;
       position: relative;
       flex: 1;
 
@@ -114,13 +119,20 @@
         right: 0;
         overflow: auto;
         padding: 10px;
+        font-size: 14px;
 
         .message {
           min-height: 10px;
-          color: $black-text
+          color: $white-text;
+
+          .user-name {
+            color: $accent
+          }
+          .content {
+          }
         }
 
-        .messageSystem {
+        .message-system {
           font-family: Inconsolata, monospace;
           text-align: center;
           min-height: 10px;
@@ -140,6 +152,22 @@
 
       .input {
         width: 90%;
+        background-color: $dark-background;
+        border: none;
+        $input-height: 30px;
+        height: $input-height;
+        line-height: $input-height;
+        border-radius: $input-height;
+        color: $white-text;
+        outline: none;
+        padding: 0 5px 0 15px;
+        font-size: 14px;
+      }
+
+      .icon {
+        margin-left: 5px;
+        color: $accent;
+        font-size: 11px;
       }
     }
   }
