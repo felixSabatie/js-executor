@@ -68,6 +68,9 @@
           isWarning: false
         })
         this.displayLogs(infos.logs)
+      },
+      saved() {
+        this.changesSaved = true
       }
     },
     methods: {
@@ -121,8 +124,13 @@
         })
       },
       saveProjectToServer() {
-        return axios.put(this.projectUrl, {
-          code: this.editorData
+        return new Promise((resolve, reject) => {
+          axios.put(this.projectUrl, {
+            code: this.editorData
+          }).then(response => {
+            this.$socket.emit('saved')
+            resolve(response)
+          }).catch(err => reject(err))
         })
       }
     }

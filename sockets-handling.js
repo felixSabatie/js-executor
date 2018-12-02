@@ -51,6 +51,10 @@ const handleSockets = (http) => {
         logs: newLogs
       })
     })
+
+    socket.on('saved', function() {
+      socket.broadcast.to(currentProject).emit('saved')
+    })
   })
 }
 
