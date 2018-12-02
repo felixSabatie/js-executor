@@ -28,8 +28,10 @@ const handleSockets = (http) => {
 
     socket.on('disconnect', function() {
       console.log('Client disconnected')
-      if(projects.has(currentProject))
+      if(projects.has(currentProject)) {
         projects.get(currentProject).delete(socket.id)
+        socket.broadcast.to(currentProject).emit('users', Array.from(projects.get(currentProject)))
+      }
     })
 
     socket.on('editedText', function(newText) {
