@@ -31,7 +31,6 @@
              @keyup.enter.prevent="sendMessage">
       <div class="send" @click="sendMessage">
         <font-awesome-icon class="icon" icon="paper-plane"/>
-        <!--TODO change icon-->
       </div>
     </div>
   </div>

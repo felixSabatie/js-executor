@@ -7,7 +7,6 @@ const handleSockets = (http) => {
 
     let currentProject = ''
     let userName = ''
-    // TODO store cursor, user name
 
     socket.on('connectedOnProject', function (projectHash) {
       socket.join(projectHash)
@@ -51,7 +50,7 @@ const handleSockets = (http) => {
 
     socket.on('newLogs', function (newLogs) {
       socket.broadcast.to(currentProject).emit('newLogs', {
-        from: userName,  // TODO put name
+        from: userName,
         logs: newLogs
       })
     })
