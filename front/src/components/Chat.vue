@@ -49,13 +49,19 @@
         this.messages.push(message)
       },
 
-      //TODO : add message at connect and and disconnect
-      // connectedOnProject(userName) {
-      //   this.messages.push({
-      //     userName: 'System',
-      //     content: userName + ' is connected'
-      //   })
-      // }
+      userConnected(userName) {
+        this.messages.push({
+          userName: 'System',
+          content: userName + ' connected'
+        })
+      },
+
+      userDisconnected(userName) {
+        this.messages.push({
+          userName: 'System',
+          content: userName + ' disconnected'
+        })
+      }
     },
     methods: {
       eraseMessages() {

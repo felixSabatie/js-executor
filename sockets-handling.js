@@ -24,6 +24,7 @@ const handleSockets = (http) => {
 
       socket.emit('currentUser', socket.id)
       socket.emit('users', Array.from(projects.get(currentProject)))
+      socket.broadcast.to(currentProject).emit('userConnected', userName)
     })
 
     socket.on('disconnect', function () {
@@ -32,6 +33,7 @@ const handleSockets = (http) => {
         projects.get(currentProject).delete(socket.id)
         socket.broadcast.to(currentProject).emit('users',
             Array.from(projects.get(currentProject)))
+        socket.broadcast.to(currentProject).emit('userDisconnected', userName)
       }
     })
 
