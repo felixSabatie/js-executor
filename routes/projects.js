@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const fs = require('fs')
 const crypto = require('crypto')
+const vm = require('vm')
 
 const redirectConsoleToFunctions = require('../utils/console-redirector').redirectConsoleToFunctions
 const restoreConsoleFunctions = require('../utils/console-redirector').restoreConsoleFunctions
@@ -73,7 +74,7 @@ router.post('/:hash/execute', function (req, res) {
   console.log('Executing...')
   redirectConsoleToFunctions(consoleLog, consoleWarn, consoleError)
 
-  executeFile(req.params.hash).then(() => {
+  executeFile(req.params.hash, consoleLog, consoleWarn, consoleError).then(() => {
     restoreConsoleFunctions()
     console.log('Done')
     res.send(logs)
@@ -88,7 +89,7 @@ router.post('/:hash/execute', function (req, res) {
   })
 })
 
-const executeFile = function(hash) {
+const executeFile = function(hash, consoleLog, consoleWarn, consoleError) {
   return new Promise((resolve, reject) => {
     const filepath = getFilePath(hash)
 
@@ -97,7 +98,14 @@ const executeFile = function(hash) {
         reject(error)
       } else {
         try {
-          eval(data)
+          vm.runInNewContext(data, {
+            console: {
+              log: consoleLog,
+              warn: consoleWarn,
+              error: consoleError
+            }
+          })
+          // eval(data)
         } catch(err) {
           console.error(err.toString())
         } finally {
