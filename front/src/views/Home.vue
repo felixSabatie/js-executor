@@ -76,15 +76,7 @@
           height: 26px;
           display: inline-block;
           animation: .9s blink step-end infinite;
-
-          @keyframes blink {
-            from, to {
-              background: none;
-            }
-            50% {
-              background-color: $accent;
-            }
-          }
+          background-color: $accent;
         }
       }
 

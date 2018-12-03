@@ -100,15 +100,6 @@
       &.cursor-5 {
         background: $accent5;
       }
-
-      @keyframes blink {
-        from, to {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0;
-        }
-      }
     }
   }
 </style>
