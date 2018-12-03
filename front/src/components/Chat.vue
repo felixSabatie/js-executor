@@ -11,7 +11,7 @@
     </div>
     <div class="messages-wrapper">
       <div class="messages">
-        <div v-for="(message, index) in messages">
+        <div v-for="(message, index) in messages" :key="index">
           <div class="message-system" v-if="message.userName==='System'">
             {{message.content}}
           </div>
