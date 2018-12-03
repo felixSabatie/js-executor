@@ -161,18 +161,37 @@
       grid-template-rows: repeat(2, 1fr);
       grid-template-columns: auto 300px;
 
+      @media screen and (max-width: 601px) {
+        grid-template-rows: 6fr 4fr;
+        grid-template-columns: auto;
+      }
+
       .editor-container {
         grid-row: 1 / last-line;
         background-color: #1e1e1e;
         padding-top: 10px;
+
+        @media screen and (max-width: 601px) {
+          grid-row: 1 / 2;
+          grid-column: 1 / last-column;
+        }
       }
       .terminal-container {
         grid-column: 2 / 3;
         grid-row: 1 / 2;
+
+        @media screen and (max-width: 601px) {
+          grid-row: 2 / last-line;
+          grid-column: 1 / last-column;
+        }
       }
       .chat-container {
         grid-column: 2 / 3;
         grid-row: 2 / 3;
+
+        @media screen and (max-width: 601px) {
+          display: none;
+        }
       }
     }
 

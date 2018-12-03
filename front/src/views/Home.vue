@@ -1,10 +1,7 @@
 <template>
   <div class="home">
     <div class="content">
-      <div class="welcome-text-container">
-        <span class="welcome-text">{{welcomeText}}</span>
-        <span class="cursor"></span>
-      </div>
+      <div class="welcome-text">{{welcomeText}}<span class="cursor"></span></div>
       <div class="buttons" :class="displayButtons ? 'show' : 'hide'">
         <button class="btn" @click="generateProject">Create a project</button>
       </div>
@@ -62,18 +59,16 @@
     align-items: center;
 
     .content {
-      .welcome-text-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      .welcome-text {
+        font-size: 30px;
+        white-space: pre-wrap;
+        text-align: center;
+        padding: 5px;
 
-        .welcome-text {
-          font-size: 30px;
-          white-space: pre-wrap;
-        }
         .cursor {
           width: 3px;
           height: 26px;
+          transform: translateY(3px);
           display: inline-block;
           animation: .9s blink step-end infinite;
           background-color: $accent;

@@ -1,3 +1,3 @@
-const serverUrl = 'http://localhost:3000'
+const serverUrl = 'http://192.168.2.19:3000'
 
 export {serverUrl}
