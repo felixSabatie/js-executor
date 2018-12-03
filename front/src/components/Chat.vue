@@ -173,7 +173,8 @@
       .icon {
         margin-left: 5px;
         color: $accent;
-        font-size: 11px;
+        font-size: 18px;
+        cursor: pointer;
       }
     }
   }
