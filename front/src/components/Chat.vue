@@ -142,6 +142,7 @@
           text-align: center;
           min-height: 10px;
           color: $system-text;
+          margin: 5px 0;
         }
       }
     }
