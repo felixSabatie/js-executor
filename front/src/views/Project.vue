@@ -75,7 +75,9 @@
         this.changesSaved = true
       },
       users(users) {
-        this.hasManyUsers = users.length > 1;
+        if(users.length > 1) {
+          this.hasManyUsers = true
+        }
       }
     },
     methods: {
