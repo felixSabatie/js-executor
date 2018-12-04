@@ -23,7 +23,7 @@ const handleSockets = (http) => {
       })
 
       socket.emit('currentUser', socket.id)
-      socket.emit('users', Array.from(projects.get(currentProject)))
+      io.to(currentProject).emit('users', Array.from(projects.get(currentProject)))
       socket.broadcast.to(currentProject).emit('userConnected', userName)
     })
 

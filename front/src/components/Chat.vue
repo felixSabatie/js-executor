@@ -42,7 +42,11 @@
       return {
         messages: [],
         contentMessage: '',
+        domMessages: {},
       }
+    },
+    mounted() {
+      this.domMessages = this.$el.querySelector('.chat .messages')
     },
     sockets: {
       messageSent(message) {
@@ -60,6 +64,13 @@
         this.messages.push({
           userName: 'System',
           content: userName + ' disconnected'
+        })
+      }
+    },
+    watch: {
+      messages() {
+        this.$nextTick(() => {
+          this.domMessages.scrollTop = this.domMessages.scrollHeight
         })
       }
     },

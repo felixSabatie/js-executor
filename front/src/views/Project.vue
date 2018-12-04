@@ -1,14 +1,14 @@
 <template>
   <div class="project" @keyup.ctrl.enter.prevent="run">
     <Navbar @run="run" @save="save" @share="share" :changes-saved="changesSaved" :display-copied-text="displayCopiedText" />
-    <div class="project-content" v-if="defaultTextLoaded">
+    <div class="project-content" v-if="defaultTextLoaded" :class="hasManyUsers ? 'has-chat' : ''">
       <div class="editor-container">
         <Editor @user-changed="userChanged" @received-change="receivedChange" :default-text="defaultText" />
       </div>
       <div class="terminal-container">
         <Terminal :logs="logs" @erase-logs="eraseLogs" />
       </div>
-      <div class="chat-container">
+      <div class="chat-container" v-if="hasManyUsers">
         <Chat />
       </div>
     </div>
@@ -38,7 +38,8 @@
         changesSaved: true,
         defaultTextLoaded: false,
         timeout: {},
-        displayCopiedText: false
+        displayCopiedText: false,
+        hasManyUsers: false
       }
     },
     components: {Editor, Chat, Terminal, Navbar, Loader},
@@ -72,6 +73,9 @@
       },
       saved() {
         this.changesSaved = true
+      },
+      users(users) {
+        this.hasManyUsers = users.length > 1;
       }
     },
     methods: {
@@ -158,8 +162,11 @@
 
     .project-content {
       display: grid;
-      grid-template-rows: repeat(2, 1fr);
       grid-template-columns: auto 300px;
+
+      &.has-chat {
+        grid-template-rows: repeat(2, 1fr);
+      }
 
       @media screen and (max-width: 601px) {
         grid-template-rows: 6fr 4fr;
